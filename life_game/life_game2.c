@@ -19,15 +19,18 @@ void to_csv(char* fname, int * cell_board, int m, int n);
 int main ( int argc, char *argv[] )
 {
   int id;
+  int p;
+
   int ierr;
   int m = 0;
   int n = 0;
   int num_j;
   int num_k;
-  int p;
   int *cell_board;
   //int *temp_board;
   double wtime;
+  double wtime2;
+  double wtime3;
   if(argc==3){
     num_j = atoi(argv[1]);
     num_k = atoi(argv[2]);
@@ -148,7 +151,7 @@ int main ( int argc, char *argv[] )
   }
 
   for(int j=0; j<num_j; j++){
-    if (j%num_k == 0){
+    if (j%num_k == num_k-1){
       ierr = MPI_Gatherv(sub_cells, row_num*(n+2), MPI_INT, &cell_board[n+2], buff_num, dis_num, MPI_INT, 0, MPI_COMM_WORLD);
       MPI_Barrier(MPI_COMM_WORLD);
       if(id==0){
@@ -162,13 +165,15 @@ int main ( int argc, char *argv[] )
     MPI_Barrier(MPI_COMM_WORLD);
   }
   ierr = MPI_Gatherv(sub_cells, row_num*(n+2), MPI_INT, &cell_board[n+2], buff_num, dis_num, MPI_INT, 0, MPI_COMM_WORLD);
+  wtime2 = MPI_Wtime ( ) - wtime;
   if(id==0)
     to_csv("life.out1", cell_board, m, n);
   
   MPI_Barrier(MPI_COMM_WORLD);
   if ( id == 0 )
   {
-    wtime = MPI_Wtime ( ) - wtime;
+    wtime3 = MPI_Wtime ( ) - wtime;
+    printf("\nTotal time:%f, %f\n", wtime2, wtime3);
   }
   /*
     Terminate MPI.
@@ -179,7 +184,7 @@ int main ( int argc, char *argv[] )
 ierr = MPI_Finalize();
 free(cell_board);
 
-printf("Finalize ok\n");
+//printf("Finalize ok\n");
 
   return 0;
 }

@@ -14,15 +14,15 @@ def gen_myself():
 #np.savetxt("board.csv", X, delimiter=",")
 
 def data_to_csv():
-    board = np.zeros((250,250)).astype(np.int32)
+    board = np.zeros((1000,1000)).astype(np.int32)
     with open("life.data1", 'r') as f:
         lines = f.readlines()
         for line in lines:
             x,y = [int(i) for i in line.split()]
             board[x,y] = 1
     with open("board.csv", 'w') as f:
-        for i in range(250):
-            for j in range(250):
+        for i in range(1000):
+            for j in range(1000):
                 f.write("%d,"%board[i][j])
             f.write('\n')
 
