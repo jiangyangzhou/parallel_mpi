@@ -57,29 +57,29 @@ int main ( int argc, char *argv[] )
     print_replicated_vector(b, mpitype, nprime, MPI_COMM_WORLD);
   
   //
-  printf("ID:%d, and storage:%f， cols:%d. \n", id, storage[49], cols);
+  printf("ID:%d, and m:%d，n:%d, cols:%d. \n", id, m, n, cols);
   col_begin = BLOCK_LOW(id, p, n);
   col_end = BLOCK_HIGH(id, p, n);
   sub_ans = malloc (m * sizeof(dtype));
-  memset(sub_ans, 0, sizeof(dtype));
+  memset(sub_ans, 0, m*sizeof(dtype));
 
   for(int i=0; i<m;i++){
     for(int j=0; j<cols; j++)
       sub_ans[i] += storage[i*cols+j] * b[col_begin+j];
   }
   if (id == 0)
-    ans = malloc(n*sizeof(dtype));
+    ans = malloc(m*sizeof(dtype));
   MPI_Reduce(sub_ans, ans, m, mpitype, MPI_SUM, 0, MPI_COMM_WORLD);
-  
+  /*
   if (id == 0){
       printf("Results:\n");
     for(int i=0;i<m; i++)
-      printf("%f,", ans[i]);
+      printf("%.2f  ", ans[i]);
   }
-  printf("\n");
+  printf("\n");*/
   free(sub_ans);
   if (id == 0)
-    free(ans);
+  free(ans);
   free(storage);
   free(b);
   MPI_Barrier(MPI_COMM_WORLD);

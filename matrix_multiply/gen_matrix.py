@@ -17,7 +17,7 @@ def gen_random_bvector(n):
     return vec
 
 if __name__=="__main__":
-    m, n = 1000, 2000
+    m, n = 2000, 3000
     mat1 = gen_random_bmatrix(m, n)
     vec = gen_random_bvector(n)
     #print(mat1[:0].sum())
